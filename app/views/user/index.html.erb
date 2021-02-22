@@ -16,7 +16,7 @@
   <% @users_set.each do |user| %>
     <tr>
       <td><%= user.id %></td>
-      <td><%= link_to user.first_name, {:action =>"index", :controller => "user" } %></td>
+      <td><%= link_to user.first_name, {:action =>"index", :controller => "photo", :id => user.id } %></td>
       <td><%= user.last_name %></td>
     </tr>
   <% end %>

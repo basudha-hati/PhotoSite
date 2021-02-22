@@ -10,11 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_16_003010) do
+ActiveRecord::Schema.define(version: 2021_02_18_051751) do
+
+  create_table "comments", force: :cascade do |t|
+    t.date "date_time"
+    t.string "comment_text"
+    t.integer "user_id"
+    t.integer "photo_id"
+  end
+
+  create_table "photos", force: :cascade do |t|
+    t.integer "user_id"
+    t.date "date_time"
+    t.string "file_name"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
   end
 
+  add_foreign_key "photos", "users"
 end
