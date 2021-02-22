@@ -8,12 +8,12 @@
 <h2>Gallery</h2>
 
 
-<% @photos.each do |photo| %>
+<% @photos.each do |photo|  %>
     <div class="polaroid">
       <div>
-      <img src="img_5terre.jpg" alt="5 Terre" style="width:100%">
+      <img src=<%= photo.file_name %> alt="5" style="width:100%">
       <tr>
-        <td><h3>Name of the file <%= photo.file_name %></h3></td>
+<!--        <td><h3>Name of the file <%#= photo.file_name %></h3></td>-->
         <td>Photo Created on :<%= photo.date_time%></td>
       </tr>
     </div>
