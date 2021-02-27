@@ -5,21 +5,9 @@ application up and running.
 
 Things you may want to cover:
 
-* Ruby version
+* Ruby version - 2.7.2
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
+* Databse - sqlite
 
 * ...
 # 1. Modified the Gemfile and added below contents:
@@ -111,6 +99,12 @@ In order to re-generate the cred file and open it rean below commands:
         bucket: "BUCKET-NAME-DEV"
       prod:
         bucket: "BUCKET-NAME-PROD"
+	
+	
+To edit in Windows run Powershell. Run the following commands. 
+	 $env:EDITOR="notepad"
+	  rails credentials:edit
+
     
 # 7. Added below details in storage.yaml file
     amazon_dev:
@@ -138,6 +132,145 @@ In order to re-generate the cred file and open it rean below commands:
 # 9. AWS S3 Bucket creation
 Logged into AWS console and created a bucket in S3 named as : photobooth-rubyonrails
 Uploaded images in S3 bucket and made the images public
+
+# 10. Docker setup in local.
+
+ * Install Docker Desktop App in windows
+ * Start the Docker 
+ * Go to the directoryof the project. 
+ * Create a Dockerfile there, the name should be exact 'Dockerfile'
+
+After creating the Dockerfile on the same path where the code for Rails application is lying, created the docker image using the below command:
+ docker build -t photositetry .
+Check the created docker images
+ docker images
+ 
+To connect your docker image from your local to AWS S3 run the below command
+ docker run -p 3000:3000 -e AWS_ACCESS_KEY_ID=<> -e AWS_SECRET_ACCESS_KEY=<> -e AWS_SESSION_TOKEN=<> -e REGISTRY_STORAGE_S3_REGION=us-east-1 -e REGISTRY_STORAGE_S3_BUCKET=photosite-on-rubyrails photositetry
+ 
+ While building the docker image mintest error came
+ To resolve that run the below commans
+  gem update bundler
+  bundle update
+
+
+Application was up and running on:: localhost:3000/index/
+
+Once application was up and running on local pushed the image to DockerHub from where EC2 instance could fetch the image:
+
+  Using image id tag the image:
+  
+  docker images
+  docker tag <IMAGE ID> shivanipathak/photositetry:<TAG NAME>
+  
+  Then image to the repository:
+  
+  docker push basudha947/photositetry
+
+
+# 11. Creating EC2 instance
+ Login to AWS account.
+* Launch an E2 instance with the following configuration
+* * Amazon Linux 2 AMI (HVM), SSD Volume Type
+* * Instance type = t2.micro
+* * Configure Security Group = Added one more SSH rule with 3000 port number
+* * Review & Launch. Download the .pem file
+
+# 12. Add IAM role to the EC2 Instance
+
+To connect S3 to AWS EC2 we need to have new IAM role that gives full access to S3.
+IAM-->Roles-->Create Role  with the below configuration
+
+FilterPolicies= AmazonS3FullAccess
+
+From AWS-Console EC2-->Instances-->Select the instance created above-->Actions-->Security-->Modify IAM Role then select Full_S3_access_from_EC2 from drop down and Save it
+
+# 13. Connect EC2 instance, download Docker, pull Docker image from Docker Hub, and run the Rails application on an EC2 instance:
+Select the EC2 instance created for the Rails application and click on Connect.
+
+A new tab opens where the below commands are given in order to connect EC2 from the terminal: instance ID
+
+Steps for mac:
+  <instance>
+  Open an SSH client.
+  Locate your private key file. The key used to launch this instance is EC2-docker.pem
+  Run this command, if necessary, to ensure your key is not publicly viewable.
+
+  	chmod 400 EC2-docker.pem
+  Connect to your instance using its Public DNS:
+
+  ec2-XXXX.compute-1.amazonaws.com
+  Example:
+
+  ssh -i "EC2-docker.pem" ec2-user@XXXX.compute-1.amazonaws.com 
+Created a new folder on Desktop as EC2
+
+Moved the **EC2-docker.pem **file from Downloads to EC2 folder
+
+Open terminal changed path to cd /Users/Basudha/Desktop/EC2
+
+Within this path ran below commands:
+
+  Changed the permission for EC2-docker.pem file :
+  	chmod 400 EC2-docker.pem
+  
+  Then SSH-ed to the  above path to connect to  EC2 instance:
+  	ssh -i "EC2-docker.pem" ec2-user@XXXX.us-east-2.compute-1.amazonaws.com 
+	
+	
+Steps for Windows: We need to have putty and puttyGen installed to run this
+ * Convert .pem file to .ppk file using puttyGen
+ * Save the private key generated 
+ * We need this key to connect to instance using putty 
+ follow --> https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/putty.html
+
+
+
+# 14. Install Docker on EC2 Instance
+Once securely connected to the EC2 instance and ran the following commands to install Docker:
+  // update
+  sudo yum update -y
+  
+  // install most recent package
+  sudo amazon-linux-extras install docker
+  
+  // start the service docker
+  sudo service docker start
+  
+  // add the ec2-docker user to the group
+  sudo usermod -a -G docker ec2-user
+  
+  // you need to logout to take affect
+  logout
+  
+  // login again
+  ssh -i "ec2-docker.pem" ec2-user@XXX.us-east-2.compute.amazonaws.com
+  
+  // check the docker version
+  docker --version
+  
+# 14. Pull Image from Docker Hub to EC2 Instance
+Once Docker gets successfully installed login and pull the Docker image from Docker Hub:
+
+  // create password fileto  store password
+  vi password
+  
+  //login to Docker 
+  sudo docker login --username basudha947 --password-stdin < ./password
+  
+  //Pull the Docker image for Photosite 
+  docker pull basudha947/sample:firsttry
+  
+  //check the image
+  docker images
+  
+  //run the docker image
+  docker run -p 3000:3000 basudha947/sample:firsttry
+Once docker image is successfully running, click on the Public IPv4 address with :3000
+
+
+
+
 
 
 		
