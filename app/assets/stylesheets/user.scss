@@ -1,6 +1,9 @@
 // Place all the styles related to the user controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+body {
+  background-color: seashell;
+}
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
@@ -15,4 +18,19 @@ td, th {
 
 tr:nth-child(even) {
   background-color: #dddddd;
+}
+
+h1 {
+  text-align: center;
+  color: cornflowerblue;
+  text-shadow: #000000;
+}
+
+h2 {
+  color: black;
+  text-shadow: 2px 2px 4px #000000;
+
+}
+img {
+  border: 5px solid #999;
 }
