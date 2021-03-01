@@ -7,30 +7,28 @@
 
 <h2 class="outset">Gallery</h2>
 
-
 <% @photos.each do |photo| %>
-    <div class="polaroid">
-      <div>
-      <img src="img_5terre.jpg" alt="5 Terre" style="width:100%">
+  <div class="polaroid">
+    <div>
+      <img src=<%= photo.file_name %> alt="5" style="width:100%">
       <tr>
-        <td><h3>Name of the file <%= photo.file_name %></h3></td>
         <td>Photo Created on :<%= photo.date_time%></td>
       </tr>
     </div>
-  <% @comments=photo.comments %>
+    <% @comments=photo.comments %>
 
-      <% @comments.each do |comment| %>
-        <div>
-          <tr>
-            <td><%= comment.comment_text %></td>
-            <td>Posted by: <b><%= link_to comment.user.first_name, {:action =>"index", :controller => "photo", :id => comment.user.id } %></b></td>
-            <td>Comment date: <%= comment.date_time%></td>
-          </tr>
-        </div>
+    <% @comments.each do |comment| %>
+      <div>
+        <tr>
+          <td><%= comment.comment_text %></td>
+          <td><i>Posted by: </i> <b><%= link_to comment.user.first_name, {:action =>"index", :controller => "photo", :id => comment.user.id } %></b></td>
+          <td>Comment date: <%= comment.date_time%></td>
+        </tr>
+      </div>
 
-      <% end %>
+    <% end %>
 
-    </div>
+  </div>
 
 
 
