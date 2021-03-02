@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="photo.scss">
+</head>
+<body>
+
+<h2 class="outset">Gallery</h2>
+
+<% @photos.each do |photo| %>
+  <div class="polaroid">
+    <div>
+      <img src=<%= photo.file_name %> alt="5" style="width:100%">
+      <tr>
+        <td>Photo Created on :<%= photo.date_time%></td>
+      </tr>
+    </div>
+    <% @comments=photo.comments %>
+
+    <% @comments.each do |comment| %>
+      <div>
+        <tr>
+          <td><%= comment.comment_text %></td>
+          <td><i>Posted by: </i> <b><%= link_to comment.user.first_name, {:action =>"index", :controller => "photo", :id => comment.user.id } %></b></td>
+          <td>Comment date: <%= comment.date_time%></td>
+        </tr>
+      </div>
+
+    <% end %>
+
+  </div>
+
+
+
+<% end %>
+
+<!--<div class="polaroid">
+  <img src="img_5terre.jpg" alt="5 Terre" style="width:100%">
+  <div class="container">
+    <p>Cinque Terre</p>
+  </div>
+  <div class="container">
+    <p>Cinque Terre</p>
+  </div>
+  <div class="container">
+    <p>Cinque Terre</p>
+  </div>
+</div>
+
+<div class="polaroid">
+  <img src="lights600x400.jpg" alt="Norther Lights" style="width:100%">
+  <div class="container">
+    <p>Northern Lights</p>
+  </div>
+  <div class="container">
+    <p>Northern Lights</p>
+  </div>
+  <div class="container">
+    <p>Northern Lights</p>
+  </div>
+  <div class="container">
+    <p>Northern Lights</p>
+  </div>
+</div>-->
+
+</body>
+</html>
